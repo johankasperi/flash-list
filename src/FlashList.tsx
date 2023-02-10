@@ -163,6 +163,7 @@ class FlashList<T> extends React.PureComponent<
     prevState: FlashListState<T>
   ): FlashListState<T> {
     const newState = { ...prevState };
+
     if (prevState.numColumns !== nextProps.numColumns) {
       newState.numColumns = nextProps.numColumns || 1;
       newState.layoutProvider = FlashList.getLayoutProvider<T>(
@@ -195,6 +196,7 @@ class FlashList<T> extends React.PureComponent<
       newState.extraData = { value: nextProps.extraData };
     }
     newState.renderItem = nextProps.renderItem;
+    newState.layoutProvider.shouldRefreshWithAnchoring = false;
     return newState;
   }
 
@@ -511,6 +513,7 @@ class FlashList<T> extends React.PureComponent<
           ...getCellContainerPlatformStyles(this.props.inverted!!, parentProps),
         }}
         index={parentProps.index}
+        type={this.props.keyExtractor?.(parentProps.data, parentProps.index)}
       >
         <PureComponentWrapper
           extendedState={parentProps.extendedState}
