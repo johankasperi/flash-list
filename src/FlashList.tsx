@@ -163,7 +163,6 @@ class FlashList<T> extends React.PureComponent<
     prevState: FlashListState<T>
   ): FlashListState<T> {
     const newState = { ...prevState };
-
     if (prevState.numColumns !== nextProps.numColumns) {
       newState.numColumns = nextProps.numColumns || 1;
       newState.layoutProvider = FlashList.getLayoutProvider<T>(
@@ -196,6 +195,9 @@ class FlashList<T> extends React.PureComponent<
       newState.extraData = { value: nextProps.extraData };
     }
     newState.renderItem = nextProps.renderItem;
+
+    // RLV retries to reposition the first visible item on layout provider change.
+    // It's not required in our case so we're disabling it
     newState.layoutProvider.shouldRefreshWithAnchoring = false;
     return newState;
   }
