@@ -478,6 +478,9 @@ class FlashList<T> extends React.PureComponent<
           onBlankAreaEvent={this.props.onBlankArea}
           onLayout={this.updateDistanceFromWindow}
           disableAutoLayout={this.props.disableAutoLayout}
+          experimentalMaintainTopContentPosition={
+            this.props.experimentalMaintainTopContentPosition
+          }
         >
           {children}
         </AutoLayoutView>
@@ -513,7 +516,9 @@ class FlashList<T> extends React.PureComponent<
           ...getCellContainerPlatformStyles(this.props.inverted!!, parentProps),
         }}
         index={parentProps.index}
-        type={this.props.keyExtractor?.(parentProps.data, parentProps.index)}
+        stableId={
+          this.props.keyExtractor?.(parentProps.data, parentProps.index) ?? ""
+        }
       >
         <PureComponentWrapper
           extendedState={parentProps.extendedState}
