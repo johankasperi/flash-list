@@ -6,6 +6,7 @@ import {
   NativeSyntheticEvent,
   StyleSheet,
   NativeScrollEvent,
+  Platform,
 } from "react-native";
 import {
   BaseItemAnimator,
@@ -42,6 +43,7 @@ import {
   hasUnsupportedKeysInContentContainerStyle,
   updateContentStyle,
 } from "./utils/ContentContainerUtils";
+import { BidirectionalScrollView } from "./BiDirectionalScrollView";
 
 interface StickyProps extends StickyContainerProps {
   children: any;
@@ -394,7 +396,10 @@ class FlashList<T> extends React.PureComponent<
           itemAnimator={this.itemAnimator}
           suppressBoundedSizeException
           externalScrollView={
-            renderScrollComponent as RecyclerListViewProps["externalScrollView"]
+            this.props.experimentalMaintainTopContentPosition &&
+            Platform.OS === "android"
+              ? (BidirectionalScrollView as unknown as RecyclerListViewProps["externalScrollView"])
+              : (renderScrollComponent as RecyclerListViewProps["externalScrollView"])
           }
         />
       </StickyHeaderContainer>
@@ -824,6 +829,10 @@ class FlashList<T> extends React.PureComponent<
         true
       );
     }
+  }
+
+  public experimentalFindApproxFirstVisibleIndex() {
+    return this.rlvRef?.findApproxFirstVisibleIndex() ?? 0;
   }
 
   public scrollToItem(params: {
